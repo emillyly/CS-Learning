@@ -1,0 +1,39 @@
+/*
+Emilly Ly
+111097939
+ely
+Homework 6 Problem 1
+
+I tried my best to understand the problem. 
+The file doesn't run but this was the result of my understanding of the question.
+*/
+
+p(a,b,c,i).
+p(X,Y,Z,S).
+
+located(monkey, a).
+located(banana, b).
+located(chair, z).
+
+walk(X,Y,S):-
+	s = i,
+	located(monkey, X),
+	located(monkey, Y).
+
+push(X,Y,S):-
+	located(monkey, X),
+	located(chair, Y).
+
+climb(S):-
+	located(monkey, Y),
+	located(chair, Y),
+	X = Y.
+	
+grasp(climb(S)):-
+	climb(S).
+	
+reach(S):-
+	located(monkey, X),
+	located(banana, X),
+	located(chair, X).
+	

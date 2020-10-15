@@ -1,0 +1,88 @@
+Struct 1:
+jwong 123456789 C- 9 1010 3.45 
+Struct 2:
+jmorrison 987654321 B+ 11 1111 98.9
+Struct 3:
+rwilhelm 321654789 A- 10 0011 98.9
+
+
+
+#Check for matching percentile
+	lw $a0, AddressOfPercentile
+	li $v0, 85			# atof
+	syscall
+	move $t9, $v0			# Value to update with
+	lw $t0, 8($s0)			# Load percentile from struct
+	beq $v0, $t0, UnchangedPercentile	# If equal - Unchanged
+	bne $v0, $t0, UpdatedPercentile		# If not equal - Update
+	PercentileDone:
+	
+	#Check for matching grade
+	lw $t9, AddressOfGrade
+	lbu $t0, 0($t9)			# First character in args
+	lbu $t1, 1($t9)			# Second character in args
+	lbu $t2, 12($s0)			# First character in struct
+	lbu $t3, 13($s0)			# Second character in struct
+	bne $t0, $t2, UpdatedGrade	# If not equal - Update
+	bne $t1, $t3, UpdatedGrade	# If not equal - Update
+	j UnchangedGrade		# If equal - unchanged
+	GradeDone:
+	
+	#Check for matching recitation
+	lw $a0, AddressOfRecitation
+	li $v0, 84			# atoi
+	syscall
+	move $t9, $v0			# Value to update with
+	lbu $t0, 14($s0)		# Load byte recitation is first 4 bits
+	sll $t1, $t0, 28
+	srl $t1, $t1, 28
+	srl $t2, $t0, 4
+	sll $t2, $t2, 4
+	beq $t9, $t1, UnchangedRecitation
+	bne $t9, $t1, UpdatedRecitation
+	RecitationDone:
+	
+	#Check for matching favtopics
+	lbu $t0, 14($s0)		# Load byte favtopics is first 4 bits
+	srl $t1, $t0, 4		# Get favtopics
+	sll $t3, $t0, 28	# For value update
+	srl $t3, $t3, 28	# Shift back
+	
+	li $t0, 0 			# Sum 
+	lw $t9, AddressOfFavTopics
+	# First int
+	lbu $t2, 0($t9)			# First integer as ASCII
+	beq $t2, 48, int2
+	addi $t0, $t0, 8
+	int2:
+	lbu $t2, 1($t9)			# Second integer as ASCII
+	beq $t2, 48, int3
+	addi $t0, $t0, 4
+	int3:
+	lbu $t2, 2($t9)			# Third integer as ASCII
+	beq $t2, 48, int4
+	addi $t0, $t0, 2
+	int4:
+	lbu $t2, 3($t9)			# Fourth integer as ASCII
+	beq $t2, 48, intDone
+	addi $t0, $t0, 1
+	intDone:
+	beq $t1, $t0, UnchangedFavTopics	# If equal - Unchanged
+	bne $t1, $t0, UpdatedFavTopics		# If not equal - Update
+	FavTopicsDone:
+	
+	# Print hex
+	move $t0, $s0			# Adress of netid
+	li $t1, 0
+	PrintLoop:
+	lbu $a0, 0($t0)	
+	bgt $t1, 14 printDone
+	li $v0, 34
+	syscall
+	la $a0, newline			# Newline string 
+	li $v0, 4			# Print 
+	syscall
+	addi $t0, $t0, 1
+	addi $t1, $t1, 1
+	j PrintLoop
+	printDone:

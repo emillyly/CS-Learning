@@ -1,0 +1,47 @@
+/*
+Emilly Ly
+111097939
+ely
+Homework 6 Problem 2
+*/
+
+figure(1, middle(triangle, square)).
+figure(2, middle(circle, triangle)). 
+figure(3, middle(square, circle)). 
+figure(4, middle(square, square)). 
+figure(5, middle(square, triangle)). 
+figure(6, middle(triangle, circle)). 
+figure(7, middle(circle, square)). 
+figure(8, middle(triangle, triangle)).
+
+relate(middle(triangle,square), middle(square,triangle), invert).
+relate(middle(square,triangle), middle(triangle,square), invert).
+relate(middle(circle,triangle), middle(triangle,circle), invert).
+relate(middle(triangle,circle), middle(circle,triangle),invert).
+relate(middle(square,circle), middle(circle,square), invert).
+relate(middle(circle,square), middle(square,circle), invert).
+
+relate(middle(triangle,square), middle(triangle,circle), inner).
+relate(middle(triangle,circle), middle(triangle,square), inner).
+relate(middle(circle,triangle), middle(circle,square), inner).
+relate(middle(circle,square), middle(circle,triangle), inner).
+relate(middle(square,triangle), middle(square,circle), inner).
+relate(middle(square,circle), middle(square,triangle), inner).
+
+relate(middle(circle,triangle), middle(square,triangle), outer).
+relate(middle(square,triangle), middle(circle,triangle), outer).
+relate(middle(triangle,circle), middle(square,circle), outer).
+relate(middle(square,circle), middle(triangle,circle), outer).
+relate(middle(triangle,square), middle(circle,square), outer).
+relate(middle(circle,square), middle(triangle,square), outer).
+
+relate(middle(square, square), middle(triangle, triangle), same).
+relate(middle(triangle, triangle), middle(square, square), same).
+
+analogy((A, B),(C,X)):-
+	figure(A, D),
+	figure(B, E),
+	figure(C, F),
+	relate(D, E, R),
+	relate(F, Y, R),
+	figure(X,Y).
